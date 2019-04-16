@@ -5,6 +5,18 @@ let dummyRepo: RepoData.repo = {
   html_url: "https://github.com/jsdf/reason-react-hacker-news",
 };
 
+let dummyRepos: array(RepoData.repo) = [|
+  {
+    stargazers_count: 27,
+    full_name: "jsdf/reason-react-hacker-news",
+    html_url: "https://github.com/jsdf/reason-react-hacker-news",
+  },
+  {
+    stargazers_count: 93,
+    full_name: "reasonml/reason-tools",
+    html_url: "https://github.com/reasonml/reason-tools",
+  },
+|];
 let optionalDummyRepo: option(RepoData.repo) = Some(dummyRepo);
 // [@react.component]
 // let make = () => {
@@ -23,13 +35,20 @@ let make = () => {
   let (repoData, setRepoData) = React.useState(() => None);
 
   let loadedReposButton =
-  <button onClick={_event => setRepoData(_prev => Some(dummyRepo))}>
-    {ReasonReact.string("Load Repos")}
-  </button>;
-  let repoItem =
+    <button onClick={_event => setRepoData(_prev => Some(dummyRepos))}>
+      {ReasonReact.string("Load Repos")}
+    </button>;
+
+  let repoItems =
     switch (repoData) {
-    | Some(repo) => <RepoItem repo />
+    | Some(repos) =>
+      ReasonReact.array(
+        Array.map(
+          (repo: RepoData.repo) => <RepoItem key={repo.full_name} repo />,
+          repos,
+        ),
+      )
     | None => loadedReposButton
     };
-  <div> <h1> {ReasonReact.string("Reason Projects")} </h1> repoItem </div>;
+  <div> <h1> {ReasonReact.string("Reason Projects")} </h1> repoItems </div>;
 };
