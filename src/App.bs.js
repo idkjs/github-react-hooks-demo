@@ -24,9 +24,12 @@ function App(Props) {
       }, "Load Repos");
   React.useEffect((function () {
           RepoData$ReactTemplate.fetchRepos(/* () */0).then((function (repoData) {
-                  Curry._1(setRepoData, (function (_prev) {
-                          return repoData;
-                        }));
+                    Curry._1(setRepoData, (function (_prev) {
+                            return repoData;
+                          }));
+                    return Promise.resolve(/* () */0);
+                  })).catch((function (err) {
+                  console.log("An error occurred: " + String(err));
                   return Promise.resolve(/* () */0);
                 }));
           return undefined;

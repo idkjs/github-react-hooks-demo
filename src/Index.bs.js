@@ -2,7 +2,7 @@
 'use strict';
 
 var React = require("react");
-var ReactDOMRe = require("reason-react/lib/js/src/ReactDOMRe.js");
+var ReactDOMRe = require("reason-react/src/ReactDOMRe.js");
 var App$ReactTemplate = require("./App.bs.js");
 
 require('./index.css');
