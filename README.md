@@ -1,4 +1,6 @@
-# pomodoro-timer
+# Github React Hooks Demo
+
+see: <https://jamesfriend.com.au/a-first-reason-react-app-for-js-developers>
 
 ## Run Project
 
@@ -7,6 +9,8 @@ npm install
 npm start
 # in another tab
 npm run webpack
+# in another tab
+npx serve /build
 ```
 
 ## Hooks
