@@ -47,10 +47,10 @@ let make = () => {
          setRepoData(_prev => Some(repoData));
          Js.Promise.resolve();
        })
-      |> Js.Promise.catch(err => {
-        Js.log("An error occurred: " ++ Js.String.make(err));
-        Js.Promise.resolve()
-      })
+    |> Js.Promise.catch(err => {
+         Js.log("An error occurred: " ++ Js.String.make(err));
+         Js.Promise.resolve();
+       })
     |> ignore;
     None; // so the effect will only run once, on mount. Also, the second arg to useEffect is the initial state so we are passing None option as initial state.
   });
@@ -65,5 +65,9 @@ let make = () => {
       )
     | None => React.string("Loading...")
     };
-  <div> <h1> {ReasonReact.string("Reason Projects")} </h1> repoItems </div>;
+  <div>
+    <h1> {ReasonReact.string("Reason Projects")} </h1>
+    <Timer />
+    repoItems
+  </div>;
 };

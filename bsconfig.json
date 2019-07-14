@@ -17,6 +17,7 @@
   "bs-dependencies": [
     "reason-react",
     "bs-fetch",
+    "bs-faker",
     "@glennsl/bs-json"
   ],
   "refmt": 3

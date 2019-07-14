@@ -8,12 +8,14 @@ module Button = {
 type state = {
   seconds: int,
   isTicking: bool,
+  post: string,
 };
 
 type action =
   | Start
   | Stop
   | Reset
+  | Post
   | Tick;
 
 let padNumber = numString =>
@@ -37,7 +39,12 @@ let updateTitle: string => unit = [%bs.raw
     document.title = "⏰ " + remaining + " ⏰";
   }|}
 ];
-
+let updatePost: string => unit = [%bs.raw
+  {|
+  function updateTitle(remaining) {
+    document.title = "⏰ " + remaining + " ⏰";
+  }|}
+];
 
 [@react.component]
 let make = () => {
@@ -48,22 +55,32 @@ let make = () => {
         | Start => {...state, isTicking: true}
         | Stop => {...state, isTicking: false}
         | Reset => {...state, seconds: 30}
-        | Tick => state.isTicking && state.seconds > 0
-        ? {
-          updateTitle(formatTime(state.seconds - 1));
-        {...state, seconds: state.seconds - 1};}
-        : state
+        | Post => {...state, post: BsFaker.Random.words(~count=1, ())}
+        | Tick =>
+          state.isTicking && state.seconds > 0
+            ? {
+              updateTitle(formatTime(state.seconds - 1));
+              {...state, seconds: state.seconds - 1};
+            }
+            : state
         },
       // The second argument to useReducer is the initial state of the reducer.
-      {isTicking: false, seconds: 30},
+      {isTicking: false, seconds: 30, post: ""},
     );
   // To update the timer every second, we need to create an effect.
   React.useEffect0(() => {
     let timerId = Js.Global.setInterval(() => dispatch(Tick), 1000);
-    Some(() => Js.Global.clearInterval(timerId));
+    let postId = Js.Global.setInterval(() => dispatch(Post), 1000);
+    Some(
+      () => {
+        Js.Global.clearInterval(timerId);
+        Js.Global.clearInterval(postId);
+      },
+    );
   });
 
-  <div style={ReactDOMRe.Style.make(
+  <div
+    style={ReactDOMRe.Style.make(
       ~border="1px solid black",
       ~borderRadius="8px",
       ~maxWidth="180px",
@@ -79,11 +96,20 @@ let make = () => {
       )}>
       {state.seconds |> formatTime |> ReasonReact.string}
     </p>
-     {state.isTicking
-        ? <Button label="STOP" onClick={_event => dispatch(Stop)} />
-        : <>
-            <Button label="START" onClick={_event => dispatch(Start)} />
-            <Button label="RESET" onClick={_event => dispatch(Reset)} />
-          </>}
+    <p
+      style={ReactDOMRe.Style.make(
+        ~color="#444444",
+        ~fontSize="42px",
+        ~margin="16px 0",
+        (),
+      )}>
+      {state.post |> ReasonReact.string}
+    </p>
+    {state.isTicking
+       ? <Button label="STOP" onClick={_event => dispatch(Stop)} />
+       : <>
+           <Button label="START" onClick={_event => dispatch(Start)} />
+           <Button label="RESET" onClick={_event => dispatch(Reset)} />
+         </>}
   </div>;
 };
